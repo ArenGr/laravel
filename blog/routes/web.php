@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::post('post', 'HomeController@store')->name('post');
+Route::post('post/update', 'HomeController@update')->name('update');
+Route::get('post/edit/{post_id}', 'HomeController@edit')->name('edit');
+Route::get('post/delete/{post_id}', 'HomeController@destroy')->name('destroy');
