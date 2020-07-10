@@ -16,4 +16,19 @@ class Post extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+     * undocumented function
+     *
+     * @return void
+     */
+    public function canEdit()
+    {
+        if ($this->user_id == auth()->id()) {
+           return true; 
+        }
+
+        return false;
+    }
+    
 }

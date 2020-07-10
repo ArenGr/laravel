@@ -1,32 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class PostController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        $posts = Post::with('user')->get();
-        return view('home')->with('posts', $posts);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,13 +21,11 @@ class HomeController extends Controller
             'title'=>'required|max:255',
             'post'=>'required'
         ]);
-        if (isset($request->post_button)) {
-            Post::create([
-                'user_id'=> Auth::user()->id,
-                'title' => $request->title,
-                'body' => $request->post
-            ]);
-        }
+        Post::create([
+            'user_id'=> Auth::user()->id,
+            'title' => $request->title,
+            'body' => $request->post
+        ]);
         return redirect('home');
     }
 
@@ -59,10 +38,11 @@ class HomeController extends Controller
     public function edit($post_id)
     {
         $post = Post::findOrFail($post_id);
-        if ($post->user_id==Auth::user()->id) {
+        if ($post->canEdit()) {
             return view('edit')->with('post', $post);
         }
         return redirect('errors/404');
+        /* abort(404); */ //Error page
     }
 
     /**
@@ -79,12 +59,10 @@ class HomeController extends Controller
             'post'=>'required'
         ]);
 
-        if (isset($request->save_btn)) {
-            Post::where('id',$request->post_id)->update([
-                'title'=>$request->title,
-                'body'=>$request->post
-            ]);
-        }
+        Post::where('id',$request->post_id)->update([
+            'title'=>$request->title,
+            'body'=>$request->post
+        ]);
         return redirect('home');
     }
 

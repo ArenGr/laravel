@@ -1,6 +1,14 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
+  <div class="wrap">
+    <div class="search">
+      <input type="text" class="searchTerm" placeholder="What are you looking for?">
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search">Search</i>
+      </button>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card">
@@ -26,41 +34,41 @@
           </div>
         </div>
         @if ($errors->any())
-              <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-              </div><br />
+        <div class="alert alert-danger">
+          <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div><br />
         @endif
         <div class="card-header ml-5 mr-5">{{ __('Posts history') }}</div>
         <div class="container-fluid">
           <ul class="list-unstyled">
-            @foreach ($posts as $key=>$value)
-              <tr>
-                <td>
-                  <li>
-                    <p>
-                      <td>{{$posts[$key]->user->name}}</td>
-                      <br>
-                      <td><b>{{ $posts[$key]->title.": " }}</b></td>
-                      <td>{{ $posts[$key]->body }}</td>
-                      <br>
-                      <small><em>{{ $posts[$key]->updated_at }}</em></small>
-                      @if ($posts[$key]->user_id==Auth::user()->id)
-                      <div style="align:right; float:left; clear:none">
-                        <a href="{{route('edit', $posts[$key]->id)}}" class="btn btn-info">Edit</a>
-                      </div>
-                      <div >
-                        <a href="{{route('destroy', $posts[$key]->id)}}" class="btn btn-danger">Delete</a>
-                      </div>
-                      @endif
-                      <hr>
-                    </p>
-                  </li>
-                </td>
-              </tr>
+            @foreach ($posts as $post)
+            <tr>
+              <td>
+                <li>
+                  <p>
+                    <td>{{$post->user->name}}</td>
+                    <br>
+                    <td><b>{{ $post->title.": " }}</b></td>
+                    <td>{{ $post->body }}</td>
+                    <br>
+                    <small><em>{{ $post->updated_at }}</em></small>
+                    @if ($post->user_id==Auth::user()->id)
+                    <div style="align:right; float:left; clear:none">
+                      <a href="{{route('edit', $post->id)}}" class="btn btn-info">Edit</a>
+                    </div>
+                    <div >
+                      <a href="{{route('destroy', $post->id)}}" class="btn btn-danger">Delete</a>
+                    </div>
+                    @endif
+                    <hr>
+                  </p>
+                </li>
+              </td>
+            </tr>
             @endforeach
           </ul>
         </div>
